@@ -1,216 +1,109 @@
-# Finds random beginning room and random ending rooms
-
 import random
+
+# Define initial settings
+position = int(random.randint(1, 16))
+exit_position = int(random.randint(1, 16))
+beast_position = int(random.randint(1, 16))
+flashlight = False
+personality = "Beast"
+beast_moved_last_turn = False
+
+# Ensure no overlaps
+while position == exit_position or position == beast_position or exit_position == beast_position:
+    position = int(random.randint(1, 16))
+    exit_position = int(random.randint(1, 16))
+    beast_position = int(random.randint(1, 16))
+
+# Define room layouts
+room_layouts = [    # Room 1
+    " ----- ----- ----- -----\n|     |     |     |     |\n|  X  |     |     |     |\n|     |     |     |     |\n ----- ----- ------ -----\n|     |     |     |     |\n|     |     |     |     |\n|     |     |     |     |\n ----- ----- ------ -----\n|     |     |     |     |\n|     |     |     |     |\n|     |     |     |     |\n ----- ----- ------ -----\n|     |     |     |     |\n|     |     |     |     |\n|     |     |     |     |\n ----- ----- ------ -----",
+    # Room 2
+    " ----- ----- ----- -----\n|     |     |     |     |\n|     |  X  |     |     |\n|     |     |     |     |\n ----- ----- ------ -----\n|     |     |     |     |\n|     |     |     |     |\n|     |     |     |     |\n ----- ----- ------ -----\n|     |     |     |     |\n|     |     |     |     |\n|     |     |     |     |\n ----- ----- ------ -----\n|     |     |     |     |\n|     |     |     |     |\n|     |     |     |     |\n ----- ----- ------ -----",
+    # Room 3
+    " ----- ----- ----- -----\n|     |     |     |     |\n|     |     |  X  |     |\n|     |     |     |     |\n ----- ----- ------ -----\n|     |     |     |     |\n|     |     |     |     |\n|     |     |     |     |\n ----- ----- ------ -----\n|     |     |     |     |\n|     |     |     |     |\n|     |     |     |     |\n ----- ----- ------ -----\n|     |     |     |     |\n|     |     |     |     |\n|     |     |     |     |\n ----- ----- ------ -----",
+    # Room 4
+    " ----- ----- ----- -----\n|     |     |     |     |\n|     |     |     |  X  |\n|     |     |     |     |\n ----- ----- ------ -----\n|     |     |     |     |\n|     |     |     |     |\n|     |     |     |     |\n ----- ----- ------ -----\n|     |     |     |     |\n|     |     |     |     |\n|     |     |     |     |\n ----- ----- ------ -----\n|     |     |     |     |\n|     |     |     |     |\n|     |     |     |     |\n ----- ----- ------ -----",
+    # Room 5
+    " ----- ----- ----- -----\n|     |     |     |     |\n|     |     |     |     |\n|     |     |     |     |\n ----- ----- ------ -----\n|     |     |     |     |\n|  X  |     |     |     |\n|     |     |     |     |\n ----- ----- ------ -----\n|     |     |     |     |\n|     |     |     |     |\n|     |     |     |     |\n ----- ----- ------ -----\n|     |     |     |     |\n|     |     |     |     |\n|     |     |     |     |\n ----- ----- ------ -----",
+    # Room 6
+    " ----- ----- ----- -----\n|     |     |     |     |\n|     |     |     |     |\n|     |     |     |     |\n ----- ----- ------ -----\n|     |     |     |     |\n|     |  X  |     |     |\n|     |     |     |     |\n ----- ----- ------ -----\n|     |     |     |     |\n|     |     |     |     |\n|     |     |     |     |\n ----- ----- ------ -----\n|     |     |     |     |\n|     |     |     |     |\n|     |     |     |     |\n ----- ----- ------ -----",
+    # Room 7
+    " ----- ----- ----- -----\n|     |     |     |     |\n|     |     |     |     |\n|     |     |     |     |\n ----- ----- ------ -----\n|     |     |     |     |\n|     |     |  X  |     |\n|     |     |     |     |\n ----- ----- ------ -----\n|     |     |     |     |\n|     |     |     |     |\n|     |     |     |     |\n ----- ----- ------ -----\n|     |     |     |     |\n|     |     |     |     |\n|     |     |     |     |\n ----- ----- ------ -----",
+    # Room 8
+    " ----- ----- ----- -----\n|     |     |     |     |\n|     |     |     |     |\n|     |     |     |     |\n ----- ----- ------ -----\n|     |     |     |     |\n|     |     |     |  X  |\n|     |     |     |     |\n ----- ----- ------ -----\n|     |     |     |     |\n|     |     |     |     |\n|     |     |     |     |\n ----- ----- ------ -----\n|     |     |     |     |\n|     |     |     |     |\n|     |     |     |     |\n ----- ----- ------ -----",
+    # Room 9
+    " ----- ----- ----- -----\n|     |     |     |     |\n|     |     |     |     |\n|     |     |     |     |\n ----- ----- ------ -----\n|     |     |     |     |\n|     |     |     |     |\n|     |     |     |     |\n ----- ----- ------ -----\n|     |     |     |     |\n|  X  |     |     |     |\n|     |     |     |     |\n ----- ----- ------ -----\n|     |     |     |     |\n|     |     |     |     |\n|     |     |     |     |\n ----- ----- ------ -----",
+    # Room 10
+    " ----- ----- ----- -----\n|     |     |     |     |\n|     |     |     |     |\n|     |     |     |     |\n ----- ----- ------ -----\n|     |     |     |     |\n|     |     |     |     |\n|     |     |     |     |\n ----- ----- ------ -----\n|     |     |     |     |\n|     |  X  |     |     |\n|     |     |     |     |\n ----- ----- ------ -----\n|     |     |     |     |\n|     |     |     |     |\n|     |     |     |     |\n ----- ----- ------ -----",
+    # Room 11
+    " ----- ----- ----- -----\n|     |     |     |     |\n|     |     |     |     |\n|     |     |     |     |\n ----- ----- ------ -----\n|     |     |     |     |\n|     |     |     |     |\n|     |     |     |     |\n ----- ----- ------ -----\n|     |     |     |     |\n|     |     |  X  |     |\n|     |     |     |     |\n ----- ----- ------ -----\n|     |     |     |     |\n|     |     |     |     |\n|     |     |     |     |\n ----- ----- ------ -----",
+    # Room 12
+    " ----- ----- ----- -----\n|     |     |     |     |\n|     |     |     |     |\n|     |     |     |     |\n ----- ----- ------ -----\n|     |     |     |     |\n|     |     |     |     |\n|     |     |     |     |\n ----- ----- ------ -----\n|     |     |     |     |\n|     |     |     |  X  |\n|     |     |     |     |\n ----- ----- ------ -----\n|     |     |     |     |\n|     |     |     |     |\n|     |     |     |     |\n ----- ----- ------ -----",
+    # Room 13
+    " ----- ----- ----- -----\n|     |     |     |     |\n|     |     |     |     |\n|     |     |     |     |\n ----- ----- ------ -----\n|     |     |     |     |\n|     |     |     |     |\n|     |     |     |     |\n ----- ----- ------ -----\n|     |     |     |     |\n|     |     |     |     |\n|     |     |     |     |\n ----- ----- ------ -----\n|     |     |     |     |\n|  X  |     |     |     |\n|     |     |     |     |\n ----- ----- ------ -----",
+    # Room 14
+    " ----- ----- ----- -----\n|     |     |     |     |\n|     |     |     |     |\n|     |     |     |     |\n ----- ----- ------ -----\n|     |     |     |     |\n|     |     |     |     |\n|     |     |     |     |\n ----- ----- ------ -----\n|     |     |     |     |\n|     |     |     |     |\n|     |     |     |     |\n ----- ----- ------ -----\n|     |     |     |     |\n|     |  X  |     |     |\n|     |     |     |     |\n ----- ----- ------ -----",
+    # Room 15
+    " ----- ----- ----- -----\n|     |     |     |     |\n|     |     |     |     |\n|     |     |     |     |\n ----- ----- ------ -----\n|     |     |     |     |\n|     |     |     |     |\n|     |     |     |     |\n ----- ----- ------ -----\n|     |     |     |     |\n|     |     |     |     |\n|     |     |     |     |\n ----- ----- ------ -----\n|     |     |     |     |\n|     |     |  X  |     |\n|     |     |     |     |\n ----- ----- ------ -----",
+    # Room 16
+    " ----- ----- ----- -----\n|     |     |     |     |\n|     |     |     |     |\n|     |     |     |     |\n ----- ----- ------ -----\n|     |     |     |     |\n|     |     |     |     |\n|     |     |     |     |\n ----- ----- ------ -----\n|     |     |     |     |\n|     |     |     |     |\n|     |     |     |     |\n ----- ----- ------ -----\n|     |     |     |     |\n|     |     |     |  X  |\n|     |     |     |     |\n ----- ----- ------ -----",
+]
+
+# Display room based on player's current position
+def display_room(position):
+    print(room_layouts[position - 1])
+
+# Game loop
 while True:
-    position = int(random.randint(1,16))
-    exit = int(random.randint(1,16))
-    beast = int(random.randint(1,16))
-    flashlight
-    if position == exit:
+    display_room(position)
+    print(f"You are in room {position}.", end=" ")
+
+    # Nearby beast alert
+    if abs(beast_position - position) == 1:
+        print("You hear footsteps nearby...")
+
+    # Get user move
+    move = input("Choose direction (W for up, S for down, A for left, D for right) or check inventory (I): ").upper()
+    if move == "I":
+        print("Inventory:", "Flashlight" if flashlight else "Empty")
         continue
-    if position == beast or exit == beast:
+
+    # Movement handling
+    if move == "W" and position > 4:                # Move Up
+        position -= 4
+    elif move == "S" and position <= 12:            # Move Down
+        position += 4
+    elif move == "A" and position not in [1, 5, 9, 13]:  # Move Left
+        position -= 1
+    elif move == "D" and position not in [4, 8, 12, 16]:  # Move Right
+        position += 1
+    else:
+        print("Invalid move! Try again.")
         continue
-    if position != exit and position != beast:
-        break
-   
-# Navigate rooms
-print("You have been kidnapped by the beast! Navigate through the rooms and find a way to escape.")
 
-print("Here is your current position:")
-one = (" ----- ----- ----- -----\n|     |     |     |     |\n|  X  |     |     |     |\n|     |     |     |     |\n ----- ----- ------ -----\n|     |     |     |     |\n|     |     |     |     |\n|     |     |     |     |\n ----- ----- ------ -----\n|     |     |     |     |\n|     |     |     |     |\n|     |     |     |     |\n ----- ----- ------ -----\n|     |     |     |     |\n|     |     |     |     |\n|     |     |     |     |\n ----- ----- ------ -----")
-two = (" ----- ----- ----- -----\n|     |     |     |     |\n|     |  X  |     |     |\n|     |     |     |     |\n ----- ----- ------ -----\n|     |     |     |     |\n|     |     |     |     |\n|     |     |     |     |\n ----- ----- ------ -----\n|     |     |     |     |\n|     |     |     |     |\n|     |     |     |     |\n ----- ----- ------ -----\n|     |     |     |     |\n|     |     |     |     |\n|     |     |     |     |\n ----- ----- ------ -----")
-three = (" ----- ----- ----- -----\n|     |     |     |     |\n|     |     |  X  |     |\n|     |     |     |     |\n ----- ----- ------ -----\n|     |     |     |     |\n|     |     |     |     |\n|     |     |     |     |\n ----- ----- ------ -----\n|     |     |     |     |\n|     |     |     |     |\n|     |     |     |     |\n ----- ----- ------ -----\n|     |     |     |     |\n|     |     |     |     |\n|     |     |     |     |\n ----- ----- ------ -----")
-four = (" ----- ----- ----- -----\n|     |     |     |     |\n|     |     |     |  X  |\n|     |     |     |     |\n ----- ----- ------ -----\n|     |     |     |     |\n|     |     |     |     |\n|     |     |     |     |\n ----- ----- ------ -----\n|     |     |     |     |\n|     |     |     |     |\n|     |     |     |     |\n ----- ----- ------ -----\n|     |     |     |     |\n|     |     |     |     |\n|     |     |     |     |\n ----- ----- ------ -----")
-five = (" ----- ----- ----- -----\n|     |     |     |     |\n|     |     |     |     |\n|     |     |     |     |\n ----- ----- ------ -----\n|     |     |     |     |\n|  X  |     |     |     |\n|     |     |     |     |\n ----- ----- ------ -----\n|     |     |     |     |\n|     |     |     |     |\n|     |     |     |     |\n ----- ----- ------ -----\n|     |     |     |     |\n|     |     |     |     |\n|     |     |     |     |\n ----- ----- ------ -----")
-six = (" ----- ----- ----- -----\n|     |     |     |     |\n|     |     |     |     |\n|     |     |     |     |\n ----- ----- ------ -----\n|     |     |     |     |\n|     |  X  |     |     |\n|     |     |     |     |\n ----- ----- ------ -----\n|     |     |     |     |\n|     |     |     |     |\n|     |     |     |     |\n ----- ----- ------ -----\n|     |     |     |     |\n|     |     |     |     |\n|     |     |     |     |\n ----- ----- ------ -----")
-seven = (" ----- ----- ----- -----\n|     |     |     |     |\n|     |     |     |     |\n|     |     |     |     |\n ----- ----- ------ -----\n|     |     |     |     |\n|     |     |  X |     |\n|     |     |     |     |\n ----- ----- ------ -----\n|     |     |     |     |\n|     |     |     |     |\n|     |     |     |     |\n ----- ----- ------ -----\n|     |     |     |     |\n|     |     |     |     |\n|     |     |     |     |\n ----- ----- ------ -----")
-eight = (" ----- ----- ----- -----\n|     |     |     |     |\n|     |     |     |     |\n|     |     |     |     |\n ----- ----- ------ -----\n|     |     |     |     |\n|     |     |     |  X  |\n|     |     |     |     |\n ----- ----- ------ -----\n|     |     |     |     |\n|     |     |     |     |\n|     |     |     |     |\n ----- ----- ------ -----\n|     |     |     |     |\n|     |     |     |     |\n|     |     |     |     |\n ----- ----- ------ -----")
-nine = (" ----- ----- ----- -----\n|     |     |     |     |\n|     |     |     |     |\n|     |     |     |     |\n ----- ----- ------ -----\n|     |     |     |     |\n|     |     |     |     |\n|     |     |     |     |\n ----- ----- ------ -----\n|     |     |     |     |\n|  X  |     |     |     |\n|     |     |     |     |\n ----- ----- ------ -----\n|     |     |     |     |\n|     |     |     |     |\n|     |     |     |     |\n ----- ----- ------ -----")
-ten = (" ----- ----- ----- -----\n|     |     |     |     |\n|     |     |     |     |\n|     |     |     |     |\n ----- ----- ------ -----\n|     |     |     |     |\n|     |     |     |     |\n|     |     |     |     |\n ----- ----- ------ -----\n|     |     |     |     |\n|     |  X  |     |     |\n|     |     |     |     |\n ----- ----- ------ -----\n|     |     |     |     |\n|     |     |     |     |\n|     |     |     |     |\n ----- ----- ------ -----")
-eleven = (" ----- ----- ----- -----\n|     |     |     |     |\n|     |     |     |     |\n|     |     |     |     |\n ----- ----- ------ -----\n|     |     |     |     |\n|     |     |     |     |\n|     |     |     |     |\n ----- ----- ------ -----\n|     |     |     |     |\n|     |     |  X  |     |\n|     |     |     |     |\n ----- ----- ------ -----\n|     |     |     |     |\n|     |     |     |     |\n|     |     |     |     |\n ----- ----- ------ -----")
-tweleve = (" ----- ----- ----- -----\n|     |     |     |     |\n|     |     |     |     |\n|     |     |     |    |\n ----- ----- ------ -----\n|     |     |     |     |\n|     |     |     |     |\n|     |     |     |     |\n ----- ----- ------ -----\n|     |     |     |     |\n|     |     |     |  X  |\n|     |     |     |     |\n ----- ----- ------ -----\n|     |     |     |     |\n|     |     |     |     |\n|     |     |     |     |\n ----- ----- ------ -----")
-thirteen = (" ----- ----- ----- -----\n|     |     |     |     |\n|     |     |     |     |\n|     |     |     |     |\n ----- ----- ------ -----\n|    |     |     |     |\n|     |     |     |     |\n|     |     |     |     |\n ----- ----- ------ -----\n|     |     |     |     |\n|     |     |     |     |\n|     |     |     |     |\n ----- ----- ------ -----\n|     |     |     |     |\n|  X  |     |     |     |\n|     |     |     |     |\n ----- ----- ------ -----")
-fourteen = (" ----- ----- ----- -----\n|     |     |     |     |\n|     |     |     |     |\n|     |     |     |     |\n ----- ----- ------ -----\n|     |     |     |     |\n|     |     |     |     |\n|     |     |     |     |\n ----- ----- ------ -----\n|     |     |     |     |\n|     |     |     |     |\n|     |     |     |     |\n ----- ----- ------ -----\n|     |     |     |     |\n|     |  X  |     |     |\n|     |     |     |     |\n ----- ----- ------ -----")
-fifteen = (" ----- ----- ----- -----\n|     |     |     |     |\n|     |     |     |     |\n|     |     |     |     |\n ----- ----- ------ -----\n|     |     |     |     |\n|     |     |     |     |\n|     |     |     |     |\n ----- ----- ------ -----\n|     |     |     |     |\n|     |     |     |     |\n|     |     |     |     |\n ----- ----- ------ -----\n|     |     |     |     |\n|     |     |  X  |     |\n|     |     |     |     |\n ----- ----- ------ -----")
-sixteen = (" ----- ----- ----- -----\n|     |     |     |     |\n|     |     |     |     |\n|     |     |     |     |\n ----- ----- ------ -----\n|     |     |     |     |\n|     |     |     |     |\n|     |     |     |     |\n ----- ----- ------ -----\n|     |     |     |     |\n|     |     |     |     |\n|     |     |     |     |\n ----- ----- ------ -----\n|     |     |     |     |\n|     |     |     |  X  |\n|     |     |     |     |\n ----- ----- ------ -----")
+    # Encounter with the beast
+    if position == beast_position:
+        if not flashlight:
+            print("The Beast has caught you! Game Over.")
+            break
+        else:
+            print("You encounter the Beast, but shine the flashlight, changing his personality.")
+            personality = "Kevin Wendell Crumb"
+            print("The Beast is now Kevin Wendell Crumb.")
 
+    # Check for exit conditions
+    if position == exit_position:
+        if personality == "Beast":
+            print("You reach the exit, but the Beast blocks your way. Game Over.")
+            break
+        else:
+            print("You see the light! You are free!")
+            break
 
-while True:
-   
-    if position == 1:
-        print(one)
-        print("It smells terrible in here.")
-        print("Do you want to go down (D), or to the right (R)?")
-        move = input()
-        if move.upper() == "R":
-            position = 2
-        elif move.upper() == "D":
-            position = 4
-   
-    elif position == 2:
-        print(two)
-        print("It's so dark, You can't see anything.")
-        print("Do you want to go left (L), to the right (R), or down(D)?")
-        move = input()
-        if move.upper() == "L":
-            position = 1
-        elif move.upper() == "R":
-            position = 3
-        elif move.upper() == "D":
-            position = 5
-   
-    elif position == 3:
-        print(three)
-        print("It's getting kind of cold in here.")
-        print("Do you want to go to the left (L), or down (D)?")
-        move = input()
-        if move.upper() == "L":
-            position = 2
-        elif move.upper() == "D":
-            position = 6
-   
-    elif position == 4:
-        print(four)
-        print("It's getting harder to breathe.")
-        print("Do you want to go to the right (R), down (D), or up (U)?")
-        move = input()
-        if move.upper() == "R":
-            position = 5
-        elif move.upper() == "U":
-            position = 1
-        elif move.upper() == "D":
-            position = 7
-   
-    elif position == 5:
-        print(five)
-        print("It's hotter in this area.")
-        print("Do you want to go up (U), to the left (L), to the right (R), or down (D)?")        
-        move = input()
-        if move.upper() == "L":
-            position = 4
-        elif move.upper() == "R":
-            position = 6
-        elif move.upper() == "D":
-            position = 8
-        elif move.upper() == "U":
-            position = 2
-   
-    elif position == 6:
-        print(six)
-        print("This area is really cramped.")
-        print("Do you want to go up (U), to the left (L), or down (D)?")
-        move = input()
-        if move.upper() == "U":
-            position = 3
-        elif move.upper() == "D":
-            position = 9
-        elif move.upper() == "L":
-            position = 5
-   
-    elif position == 7:
-        print(seven)
-        print("Theres a lot of space in this room.")
-        print("Do you want to go up (U), or to the right (R)?")
-        move = input()
-        if move.upper() == "U":
-            position = 4
-        elif move.upper() == "R":
-            position = 8
-   
-    elif position == 8:
-        print(eight)
-        print("It's really dusty in this room.")
-        print("Do you want to go up (U), to the right (R), or to the left (L)?")
-        move = input()
-        if move.upper() == "U":
-            position = 5
-        elif move.upper() == "R":
-            position = 9
-        elif move.upper() == "L":
-            position = 7
-   
-    elif position == 9:
-        print(nine)
-        print("The rocks are sharp in this one.")
-        print("Do you want to go up (U), or to the left (L)?")
-        move = input()
-        if move.upper() == "L":
-            position = 8
-        elif move.upper() == "U":
-            position = 6
-   
-    if position == bad_ending:
-        if bad_ending == 1:
-            print(one)
-            print("You chose the wrong room. You never got out of the cave.")
-            break
-        if bad_ending == 2:
-            print(two)
-            print("You chose the wrong room. You never got out of the cave.")
-            break
-        if bad_ending == 3:
-            print(three)
-            print("You chose the wrong room. You never got out of the cave.")
-            break
-        if bad_ending == 4:
-            print(four)
-            print("You chose the wrong room. You never got out of the cave.")
-            break
-        if bad_ending == 5:
-            print(five)
-            print("You chose the wrong room. You never got out of the cave.")
-            break
-        if bad_ending == 6:
-            print(six)
-            print("You chose the wrong room. You never got out of the cave.")
-            break
-        if bad_ending == 7:
-            print(seven)
-            print("You chose the wrong room. You never got out of the cave.")
-            break
-        if bad_ending == 8:
-            print(eight)
-            print("You chose the wrong room. You never got out of the cave.")
-            break
-        if bad_ending == 9:
-            print(nine)
-            print("You chose the wrong room. You never got out of the cave.")
-            break
-       
-    if position == ending:
-        if ending == 1:
-            print(one)
-            print("You see the light! You are free!")
-            break
-        elif ending == 2:
-            print(two)
-            print("You see the light! You are free!")
-            break
-        elif ending == 3:
-            print(three)
-            print("You see the light! You are free!")
-            break
-        elif ending == 4:
-            print(four)
-            print("You see the light! You are free!")
-            break
-        elif ending == 5:
-            print(five)
-            print("You see the light! You are free!")
-            break
-        elif ending == 6:
-            print(six)
-            print("You see the light! You are free!")
-            break
-        elif ending == 7:
-            print(seven)
-            print("You see the light! You are free!")
-            break
-        elif ending == 8:
-            print(eight)
-            print("You see the light! You are free!")
-            break
-        elif ending == 9:
-            print(nine)
-            print("You see the light! You are free!")
-            break
+    # Move the beast every turn (except when adjacent)
+    if not beast_moved_last_turn and abs(beast_position - position) > 1:
+        beast_position = random.choice([i for i in range(1, 17) if i != position and i != exit_position])
+        beast_moved_last_turn = True
+    else:
+        beast_moved_last_turn = False
+
